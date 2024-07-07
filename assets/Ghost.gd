@@ -6,6 +6,7 @@ signal ghost_ate_player
 signal ghost_became_vulnerable
 signal ghost_restored
 
+@onready var gamenode = get_node("/root/Pac-Man")
 @onready var agent:NavigationAgent2D = $NavigationAgent2D
 @export var scatter_corner:Node2D
 @export var corner_points:Array[Vector2]
@@ -27,6 +28,7 @@ enum {
 func _ready() -> void:
 	assert(scatter_corner, "Assign the instance's Scatter Corner in the inspector")
 	start_pos = global_position
+	await gamenode.ready
 	call_deferred("nav_setup")
 
 
@@ -108,8 +110,8 @@ func animate(vel: Vector2):
 
 func reset():
 	global_position = start_pos
+	agent.target_position = start_pos
 	state = IN_PEN
-	agent.target_position = global_position
 	$Animation.play("idle")
 
 

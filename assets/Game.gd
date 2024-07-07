@@ -1,52 +1,51 @@
 extends Node2D
 
-const tile_size = 8
+const tile_size:int = 8
 
-@export var pellet_prefab: Resource
-@export var vulnerable_time := 7.0
+@export var pellet_prefab:Resource
+@export var vulnerable_time:float = 7.0
 
-var pellets_left = 244
-var starting_pellets = pellets_left
-var current_ghost := 0
-var ghost_names = ["Red", "Pink", "Blue", "Orange"]
-var lives := 5
-var vulnearable_ghosts := 0
-var eaten_ghosts := 0
-var ghost_bonus = 200
-var mortal = true
+var starting_pellets:int
+var pellets_left:int
+var current_ghost:int = 0
+var ghost_names:Array[String] = ["Red", "Pink", "Blue", "Orange"]
+var lives:int = 5
+var vulnearable_ghosts:int = 0
+var eaten_ghosts:int = 0
+var ghost_bonus:int = 200
+var mortal:bool = true
+var scattering:bool = false
 
-@onready var ghosts = [$Enemies/Red, $Enemies/Pink, $Enemies/Blue, $Enemies/Orange]
-@onready var player : PacMan = $"Pac-Man"
+@onready var ghosts:Array[Node] = [$Enemies/Red, $Enemies/Pink, $Enemies/Blue, $Enemies/Orange]
+@onready var player:PacMan = $"Pac-Man"
 @onready var map:RID = get_world_2d().navigation_map
 
-var scattering := false
 
-
-func _init():
+func _init() -> void:
 	Console.add_command("toggle_navigation_draw", self, "toggle_debug_draw").register()
 	Console.add_command("skip_level", self, "level_won").register()
 	Console.add_command("invulnerability", self, "toggle_invulnerability").register()
 
 
-func _ready():
+func _ready() -> void:
 	randomize()
-	player.movement_enabled = true
+	reset()
+	player.movement_enabled = true # TODO: REMOVE ONCE WE HAVE A NEW INTRO SONG
 
 
-func _process(_delta) -> void:
-	if Input.is_action_just_pressed("quit"):
-		get_tree().quit()
-
-
-func level_won():
+func level_won() -> void:
 	$UI.level_won()
 	reset()
 
 
-func reset():
+func reset() -> void:
 	stop_ghost_audio()
 	for ghost in ghosts:
 		ghost.reset()
+		ghost.player_ate_ghost.connect(_on_player_ate_ghost)
+		ghost.ghost_ate_player.connect(_on_ghost_ate_player)
+		ghost.ghost_became_vulnerable.connect(_on_ghost_became_vulnerable)
+		ghost.ghost_restored.connect(_on_ghost_restored)
 	vulnearable_ghosts = 0
 	eaten_ghosts = 0
 	$Pellets.queue_free()
@@ -57,11 +56,16 @@ func reset():
 	add_child(pellets)
 	pellets.connect("pellet_eaten", Callable(self, "_on_Pellet_eaten"))
 	pellets.connect("power_pellet_eaten", Callable(self, "_on_Power_Pellet_eaten"))
-	pellets_left = 244
+	pellets_left = pellets.get_children().size()
 	starting_pellets = pellets_left
 
 
-func ghost_repath():
+func _process(_delta) -> void:
+	if Input.is_action_just_pressed("quit"):
+		get_tree().quit()
+
+
+func ghost_repath() -> void:
 	# Select the next ghost.
 	current_ghost += 1
 	if current_ghost >= ghosts.size():
@@ -116,17 +120,17 @@ func ghost_repath():
 			pass
 
 
-func _on_ExitL_body_entered(body):
+func _on_ExitL_body_entered(body) -> void:
 	if body is PacMan or body is Ghost:
 		body.warp_to($"Arena/Exit-R".global_position)
 
 
-func _on_ExitR_body_entered(body):
+func _on_ExitR_body_entered(body) -> void:
 	if body is PacMan or body is Ghost:
 		body.warp_to($"Arena/Exit-L".global_position)
 
 
-func _on_Power_Pellet_eaten():
+func _on_Power_Pellet_eaten() -> void:
 	$Sounds/Ghost_Woo.stop()
 	ghost_bonus = 200
 	$UI.add_score(50)
@@ -141,7 +145,7 @@ func _on_Power_Pellet_eaten():
 		level_won()
 
 
-func _on_Pellet_eaten():
+func _on_Pellet_eaten() -> void:
 	$UI.add_score(10)
 	pellets_left -= 1
 	if pellets_left % 2 == 1:
@@ -160,11 +164,11 @@ func _on_Pellet_eaten():
 		level_won()
 
 
-func _on_Ai_Timer_timeout():
+func _on_Ai_Timer_timeout() -> void:
 	ghost_repath()
 
 
-func _on_Scatter_Timer_timeout():
+func _on_Scatter_Timer_timeout() -> void:
 	scattering = !scattering
 	if vulnearable_ghosts != 0:
 		vulnearable_ghosts = 0
@@ -179,7 +183,7 @@ func _on_Scatter_Timer_timeout():
 			ghost.chase()
 
 
-func _on_ghost_ate_player(_ghost):
+func _on_ghost_ate_player(_ghost) -> void:
 	if not mortal:
 		return
 	stop_ghost_audio()
@@ -200,34 +204,34 @@ func _on_ghost_ate_player(_ghost):
 		reset()
 
 
-func toggle_debug_draw():
+func toggle_debug_draw() -> void:
 	for ghost in ghosts:
 		ghost.agent.debug_enabled = !ghost.agent.debug_enabled
 
 
-func _on_player_ate_ghost(ghost):
+func _on_player_ate_ghost(ghost) -> void:
+	print("player ate ", ghost)
 	$UI.add_score(ghost_bonus)
 	ghost_bonus *= 2
-	#var new_path := NavigationServer2D.map_get_path(map, ghost.position, Vector2(264, 140), false)
-	ghost.agent.target_position = Vector2(264, 140)
-	#ghost.path = new_path
+	ghost.agent.target_position = $GhostRespawn.global_position
+	print($GhostRespawn.global_position, " ", ghost.agent.target_position)
 	vulnearable_ghosts -= 1
 	eaten_ghosts += 1
 	$Sounds/Bwahhh.play()
 	play_appropriate_ghost_audio()
 
 
-func _on_ghost_became_vulnerable():
+func _on_ghost_became_vulnerable() -> void:
 	vulnearable_ghosts += 1
 	play_appropriate_ghost_audio()
 
 
-func _on_ghost_restored():
+func _on_ghost_restored() -> void:
 	eaten_ghosts -= 1
 	play_appropriate_ghost_audio()
 
 
-func play_appropriate_ghost_audio():
+func play_appropriate_ghost_audio() -> void:
 	if eaten_ghosts > 0:
 		$Sounds/Ghost_wahwah.stop()
 		$Sounds/Ghost_Woo.stop()
@@ -242,22 +246,22 @@ func play_appropriate_ghost_audio():
 		$Sounds/Ghost_Woo.play()
 
 
-func stop_ghost_audio():
+func stop_ghost_audio() -> void:
 	$Sounds/Ghost_Woo.stop()
 	$Sounds/Ghost_ewweww.stop()
 	$Sounds/Ghost_wahwah.stop()
 
 
-func _on_Intro_finished():
+func _on_Intro_finished() -> void:
 	player.movement_enabled = true
 
 
-func _on_PacMan_player_reset():
+func _on_PacMan_player_reset() -> void:
 	if lives >= 0:
 		player.movement_enabled = true
 
 
-func toggle_invulnerability():
+func toggle_invulnerability() -> void:
 	mortal = !mortal
 
 

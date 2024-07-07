@@ -152,6 +152,10 @@ position = Vector2(280, 140)
 scatter_corner = NodePath("../../ScatterCorners/BottomLeft")
 corner_points = Array[Vector2]([Vector2(204, 212), Vector2(228, 212), Vector2(228, 236), Vector2(252, 236), Vector2(252, 260), Vector2(164, 260), Vector2(164, 236), Vector2(204, 236)])
 
+[node name="GhostRespawn" type="Node2D" parent="."]
+position = Vector2(264, 140)
+metadata/_edit_lock_ = true
+
 [node name="ScatterCorners" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
 
