@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" uid="uid://bqblgs7ia4ku6" path="res://art/Power_Pellet.png" id="1"]
+[ext_resource type="Script" path="res://assets/Pellet.gd" id="2"]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 4.0
+
+[node name="Power_Pellet" type="Area2D"]
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Power_Pellet" type="Sprite2D" parent="."]
+position = Vector2( 0.5, 0.5 )
+texture = ExtResource( 1 )
+
+[connection signal="body_entered" from="." to="." method="_on_Pellet_body_entered"]
