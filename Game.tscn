@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://rl0plylmqwre"]
+[gd_scene load_steps=21 format=3 uid="uid://rl0plylmqwre"]
 
 [ext_resource type="PackedScene" uid="uid://bcj3hvtkiuemh" path="res://assets/Pellets.tscn" id="1"]
 [ext_resource type="TileSet" uid="uid://cqtqobmlrpe3c" path="res://art/Background_Tileset.tres" id="2"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://btyc12qwa2yrr" path="res://assets/Orange.tscn" id="12"]
 [ext_resource type="AudioStream" uid="uid://ce3v1g578cbe3" path="res://audio/Wah.wav" id="13"]
 [ext_resource type="AudioStream" uid="uid://dd062sqep5yno" path="res://audio/Wooo.wav" id="15"]
+[ext_resource type="AudioStream" uid="uid://dpwr1iwoov461" path="res://audio/facedownhut.mp3" id="15_hm63l"]
 [ext_resource type="AudioStream" uid="uid://bsnq2gsutj63v" path="res://audio/Scared.wav" id="16"]
 [ext_resource type="AudioStream" uid="uid://bdeiv0lswnpes" path="res://audio/Eye_Eww.wav" id="17"]
 [ext_resource type="AudioStream" uid="uid://bajjvk81qyv02" path="res://audio/Bwahhh.wav" id="18"]
@@ -37,7 +38,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+color = Color(0.0627451, 0.580392, 0, 1)
 metadata/_edit_lock_ = true
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -315,6 +316,7 @@ stream = ExtResource("6")
 pitch_scale = 1.38
 
 [node name="Intro" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("15_hm63l")
 autoplay = true
 
 [node name="Ghost_Woo" type="AudioStreamPlayer" parent="Sounds"]
