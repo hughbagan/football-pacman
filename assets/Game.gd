@@ -29,8 +29,13 @@ func _init() -> void:
 
 func _ready() -> void:
 	randomize()
-	reset()
-	player.movement_enabled = true # TODO: REMOVE ONCE WE HAVE A NEW INTRO SONG
+	for ghost in ghosts:
+		ghost.player_ate_ghost.connect(_on_player_ate_ghost)
+		ghost.ghost_ate_player.connect(_on_ghost_ate_player)
+		ghost.ghost_became_vulnerable.connect(_on_ghost_became_vulnerable)
+		ghost.ghost_restored.connect(_on_ghost_restored)
+	pellets_left = $Pellets.get_children().size()
+	starting_pellets = pellets_left
 
 
 func level_won() -> void:
@@ -42,10 +47,6 @@ func reset() -> void:
 	stop_ghost_audio()
 	for ghost in ghosts:
 		ghost.reset()
-		ghost.player_ate_ghost.connect(_on_player_ate_ghost)
-		ghost.ghost_ate_player.connect(_on_ghost_ate_player)
-		ghost.ghost_became_vulnerable.connect(_on_ghost_became_vulnerable)
-		ghost.ghost_restored.connect(_on_ghost_restored)
 	vulnearable_ghosts = 0
 	eaten_ghosts = 0
 	$Pellets.queue_free()
@@ -73,6 +74,7 @@ func ghost_repath() -> void:
 
 	# Re-process pathfinding for the next ghost
 	var ghost: Ghost = ghosts[current_ghost]
+	var scatter_points:Array[Node] = ghost.scatter_corner.get_children()
 
 	match ghost.state:
 		Ghost.CHASE:
@@ -80,40 +82,33 @@ func ghost_repath() -> void:
 			match ghost_names[current_ghost]:
 				"Red":
 					target_position = player.global_position
-					#new_path = NavigationServer2D.map_get_path(map, ghost.position, player.position, false)
-					#print(ghost.position, " ", player.position, " ", "apply path ", new_path)
 				"Pink":
 					target_position = player.global_position + (player.velocity.normalized() * 4 * tile_size)
-					#new_path = NavigationServer2D.map_get_path(map, ghost.position, target_position, false)
 				"Blue":
 					var player_heading = player.global_position + (player.velocity.normalized() * 2 * tile_size)
 					var blinky_vector = ($Enemies/Red.global_position - player_heading)
 					target_position = player_heading - blinky_vector
-					#new_path = NavigationServer2D.map_get_path(map, ghost.position, target_position, false)
 				"Orange":
 					var distance = ghost.global_position.distance_to(player.global_position)
 					if distance > 8 * tile_size:
 						target_position = player.global_position
-						#new_path = NavigationServer2D.map_get_path(map, ghost.position, player.position, false)
 					else:
-						target_position = player.global_position + (player.velocity.normalized() * -10 * tile_size)
-						#new_path = NavigationServer2D.map_get_path(map, ghost.position, target_position, false)
-			# Apply the path.
+						# Basically same as Scatter/CORNER Mode
+						target_position = ghost.agent.target_position
+						while target_position == ghost.agent.target_position:
+							target_position = scatter_points[randi() % scatter_points.size()].global_position
 			ghost.agent.target_position = target_position
-			#ghost.path = new_path
 		Ghost.CORNER:
 			# When the current target_position is pretty much reached
 			if abs(ghost.agent.get_current_navigation_path_index() - ghost.agent.get_current_navigation_path().size()) < 3:
 				# Pick a random assigned point in the corner of the map to go to
-				var scatter_points:Array[Node] = ghost.scatter_corner.get_children()
 				var new_pos:Vector2 = ghost.agent.target_position
 				while new_pos == ghost.agent.target_position:
 					new_pos = scatter_points[randi() % scatter_points.size()].global_position
 				ghost.agent.target_position = new_pos
 		Ghost.SCARED:
+			# TODO: Fix?
 			ghost.agent.target_position = Vector2(randf_range(156, 372), randf_range(24, 270))
-			#var new_path := NavigationServer2D.map_get_path(map, ghost.position, new_pos, false)
-			#ghost.path = new_path
 		Ghost.EATEN:
 			pass
 		Ghost.IN_PEN:
