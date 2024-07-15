@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://d1bq6krqdcxu3"]
 
-[ext_resource type="Script" path="res://assets/Pac_Person.gd" id="1"]
+[ext_resource type="Script" path="res://assets/Pacman.gd" id="1"]
 [ext_resource type="AudioStream" uid="uid://cdq7jqf2hr2xk" path="res://audio/Ur_ded_bro.wav" id="2"]
 [ext_resource type="Texture2D" uid="uid://bypvr20amp4af" path="res://art/Pac_Person1.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bv7krbhynhbia" path="res://art/Pac_Person3.png" id="4"]
@@ -84,7 +84,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="2"]
 radius = 6.0
 
-[node name="Pac-Man" type="CharacterBody2D"]
+[node name="Pacman" type="CharacterBody2D"]
 position = Vector2(264, 212)
 collision_layer = 5
 script = ExtResource("1")

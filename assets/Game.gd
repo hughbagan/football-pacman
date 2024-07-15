@@ -17,7 +17,7 @@ var mortal:bool = true
 var scattering:bool = false
 
 @onready var ghosts:Array[Node] = [$Enemies/Red, $Enemies/Pink, $Enemies/Blue, $Enemies/Orange]
-@onready var player:PacMan = $"Pac-Man"
+@onready var player:Pacman = $"Pacman"
 @onready var map:RID = get_world_2d().navigation_map
 
 
@@ -116,12 +116,12 @@ func ghost_repath() -> void:
 
 
 func _on_ExitL_body_entered(body) -> void:
-	if body is PacMan or body is Ghost:
+	if body is Pacman or body is Ghost:
 		body.warp_to($"Arena/Exit-R".global_position)
 
 
 func _on_ExitR_body_entered(body) -> void:
-	if body is PacMan or body is Ghost:
+	if body is Pacman or body is Ghost:
 		body.warp_to($"Arena/Exit-L".global_position)
 
 
@@ -205,11 +205,9 @@ func toggle_debug_draw() -> void:
 
 
 func _on_player_ate_ghost(ghost) -> void:
-	print("player ate ", ghost)
 	$UI.add_score(ghost_bonus)
 	ghost_bonus *= 2
 	ghost.agent.target_position = $GhostRespawn.global_position
-	print($GhostRespawn.global_position, " ", ghost.agent.target_position)
 	vulnearable_ghosts -= 1
 	eaten_ghosts += 1
 	$Sounds/Bwahhh.play()

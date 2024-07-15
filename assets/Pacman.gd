@@ -1,5 +1,5 @@
 extends CharacterBody2D
-class_name PacMan
+class_name Pacman
 
 signal player_reset
 @export var speed := 175

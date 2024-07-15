@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bcj3hvtkiuemh" path="res://assets/Pellets.tscn" id="1"]
 [ext_resource type="TileSet" uid="uid://cqtqobmlrpe3c" path="res://art/Background_Tileset.tres" id="2"]
 [ext_resource type="Texture2D" uid="uid://bv7krbhynhbia" path="res://art/Pac_Person3.png" id="3"]
-[ext_resource type="PackedScene" uid="uid://d1bq6krqdcxu3" path="res://assets/Pac-Man.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://d1bq6krqdcxu3" path="res://assets/Pacman.tscn" id="4"]
 [ext_resource type="Script" path="res://assets/Game.gd" id="5"]
 [ext_resource type="AudioStream" uid="uid://b2q283rfowx4h" path="res://audio/Uhht.wav" id="6"]
 [ext_resource type="FontFile" path="res://art/Arcade_Font.tres" id="7"]
@@ -23,7 +23,7 @@
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(8, 20)
 
-[node name="Pac-Man" type="Node2D"]
+[node name="Game" type="Node2D"]
 scale = Vector2(3, 3)
 script = ExtResource("5")
 pellet_prefab = ExtResource("1")
@@ -244,7 +244,7 @@ position = Vector2(276, 236)
 [node name="8" type="Node2D" parent="ScatterCorners/BottomRight"]
 position = Vector2(300, 236)
 
-[node name="Pac-Man" parent="." instance=ExtResource("4")]
+[node name="Pacman" parent="." instance=ExtResource("4")]
 
 [node name="Arena" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
@@ -273,7 +273,7 @@ offset_left = -28.0
 offset_top = -12.0
 offset_right = 4.0
 offset_bottom = 12.0
-color = Color(0, 0, 0, 1)
+color = Color(0.0627451, 0.580392, 0, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Exit-L"]
 position = Vector2(-16, 0)
@@ -289,7 +289,7 @@ offset_left = -4.0
 offset_top = -12.0
 offset_right = 28.0
 offset_bottom = 12.0
-color = Color(0, 0, 0, 1)
+color = Color(0.0627451, 0.580392, 0, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Exit-R"]
 position = Vector2(16, 0)
@@ -337,7 +337,7 @@ pitch_scale = 1.75
 
 [connection signal="pellet_eaten" from="Pellets" to="." method="_on_Pellet_eaten"]
 [connection signal="power_pellet_eaten" from="Pellets" to="." method="_on_Power_Pellet_eaten"]
-[connection signal="player_reset" from="Pac-Man" to="." method="_on_PacMan_player_reset"]
+[connection signal="player_reset" from="Pacman" to="." method="_on_PacMan_player_reset"]
 [connection signal="body_entered" from="Arena/Exit-L" to="." method="_on_ExitL_body_entered"]
 [connection signal="body_entered" from="Arena/Exit-R" to="." method="_on_ExitR_body_entered"]
 [connection signal="timeout" from="Ai_Timer" to="." method="_on_Ai_Timer_timeout"]

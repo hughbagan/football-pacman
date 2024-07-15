@@ -6,7 +6,7 @@ signal ghost_ate_player
 signal ghost_became_vulnerable
 signal ghost_restored
 
-@onready var gamenode = get_node("/root/Pac-Man")
+@onready var gamenode = get_node("/root/Game")
 @onready var agent:NavigationAgent2D = $NavigationAgent2D
 @export var scatter_corner:Node2D
 @export var corner_points:Array[Vector2]
