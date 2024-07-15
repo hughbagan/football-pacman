@@ -85,15 +85,15 @@ logs/
 *.vcxproj*
 
 # Build results
-*/[Dd]ebug/
-*/[Dd]ebugPublic/
-*/[Rr]elease/
-*/x64/
-*/[Bb]uild/
-*/[Bb]uilds/
-*/bld/
-*/[Bb]in/
-*/[Oo]bj/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+[Bb]uild/
+[Bb]uilds/
+bld/
+[Bb]in/
+[Oo]bj/
 *.debug
 *.dSYM
 
