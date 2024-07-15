@@ -7,12 +7,13 @@ signal ghost_became_vulnerable
 signal ghost_restored
 
 @onready var gamenode = get_node("/root/Game")
+@onready var animation:AnimatedSprite2D = $Animation
 @onready var agent:NavigationAgent2D = $NavigationAgent2D
 @export var scatter_corner:Node2D
 @export var corner_points:Array[Vector2]
-@export var speed := 176
-@export var state_speed := 1
-@export var color = "Red"
+@export var speed:float = 176.0
+@export var state_speed:float = 1.0
+@export var color:String = "Red"
 var state = IN_PEN
 var start_pos
 
@@ -28,6 +29,7 @@ enum {
 func _ready() -> void:
 	assert(scatter_corner, "Assign the instance's Scatter Corner in the inspector")
 	start_pos = global_position
+	animation.play("idle")
 	await gamenode.ready
 	call_deferred("nav_setup")
 
@@ -56,71 +58,60 @@ func _physics_process(_delta:float):
 	move_and_slide()
 
 
-func start():
+func start() -> void:
 	state = CHASE
 
 
-func chase():
+func chase() -> void:
 	if state == CORNER or state == SCARED:
 		state = CHASE
 
 
-func corner():
+func corner() -> void:
 	if state == CHASE or state == SCARED:
 		state = CORNER
 
 
-func scared():
+func scared() -> void:
 	if state != IN_PEN and state != EATEN:
 		state = SCARED
 		emit_signal("ghost_became_vulnerable")
 
 
-func animate(vel: Vector2):
+func animate(vel:Vector2) -> void:
 	match state:
 		IN_PEN, CHASE, CORNER:
+			animation.rotation = 0
+			animation.play("run")
 			if abs(vel.x) > abs(vel.y):
-				# Horizontal
 				if vel.x > 0:
-					$Animation.play("move_right")
+					animation.flip_h = false # right
 				else:
-					$Animation.play("move_left")
-			else:
-				# Vertical
-				if vel.y > 0:
-					$Animation.play("move_down")
-				else:
-					$Animation.play("move_up")
+					animation.flip_h = true # left
 		EATEN:
-			if abs(vel.x) > abs(vel.y):
-				# Horizontal
-				if vel.x > 0:
-					$Animation.play("eye_right")
-				else:
-					$Animation.play("eye_left")
-			else:
-				# Vertical
-				if vel.y > 0:
-					$Animation.play("eye_down")
-				else:
-					$Animation.play("eye_up")
+			animation.play("flying")
+			animation.rotate(PI/16)
 		SCARED:
-			$Animation.play("scared")
+			animation.play("scared")
+			if vel.x > 0:
+				animation.flip_h = false # right
+			else:
+				animation.flip_h = true # left
 
 
-func reset():
+func reset() -> void:
 	global_position = start_pos
 	agent.target_position = start_pos
 	state = IN_PEN
-	$Animation.play("idle")
+	animation.play("idle")
 
 
-func warp_to(pos):
+func warp_to(pos:Vector2) -> void:
 	global_position = pos
 	#path.resize(0) # TODO: how to translate to NavigationAgent2D?
 
 
-func _on_Area_body_entered(_body):
+func _on_Area_body_entered(_body) -> void:
 	if state == SCARED:
 		emit_signal("player_ate_ghost", self)
 		state = EATEN

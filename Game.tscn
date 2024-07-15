@@ -142,16 +142,19 @@ corner_points = Array[Vector2]([Vector2(324, 36), Vector2(364, 36), Vector2(324,
 position = Vector2(264, 140)
 scatter_corner = NodePath("../../ScatterCorners/TopLeft")
 corner_points = Array[Vector2]([Vector2(164, 36), Vector2(204, 36), Vector2(164, 68), Vector2(204, 68)])
+speed = 176.0
 
 [node name="Blue" parent="Enemies" node_paths=PackedStringArray("scatter_corner") instance=ExtResource("10")]
 position = Vector2(248, 140)
 scatter_corner = NodePath("../../ScatterCorners/BottomRight")
 corner_points = Array[Vector2]([Vector2(300, 212), Vector2(324, 212), Vector2(324, 236), Vector2(364, 236), Vector2(364, 260), Vector2(276, 260), Vector2(276, 236), Vector2(300, 236)])
+speed = 176.0
 
 [node name="Orange" parent="Enemies" node_paths=PackedStringArray("scatter_corner") instance=ExtResource("12")]
 position = Vector2(280, 140)
 scatter_corner = NodePath("../../ScatterCorners/BottomLeft")
 corner_points = Array[Vector2]([Vector2(204, 212), Vector2(228, 212), Vector2(228, 236), Vector2(252, 236), Vector2(252, 260), Vector2(164, 260), Vector2(164, 236), Vector2(204, 236)])
+speed = 176.0
 
 [node name="GhostRespawn" type="Node2D" parent="."]
 position = Vector2(264, 140)
