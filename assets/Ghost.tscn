@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3 uid="uid://bmiv870r42jew"]
+
+[ext_resource type="Script" path="res://assets/Ghost.gd" id="1_fg4i5"]
+[ext_resource type="SpriteFrames" uid="uid://cs6l5cyqswhgu" path="res://art/footballplayer_spriteframes.tres" id="2_cx0g3"]
+
+[sub_resource type="CircleShape2D" id="2"]
+radius = 4.0
+
+[node name="Ghost" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_fg4i5")
+
+[node name="Animation" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_cx0g3")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(0.99, 0.99)
+shape = SubResource("2")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+scale = Vector2(0.99, 0.99)
+shape = SubResource("2")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 4.0
+target_desired_distance = 4.0
+path_max_distance = 10.0
+path_postprocessing = 1
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area_body_entered"]

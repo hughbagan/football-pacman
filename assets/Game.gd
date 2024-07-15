@@ -8,7 +8,6 @@ const tile_size:int = 8
 var starting_pellets:int
 var pellets_left:int
 var current_ghost:int = 0
-var ghost_names:Array[String] = ["Red", "Pink", "Blue", "Orange"]
 var lives:int = 5
 var vulnearable_ghosts:int = 0
 var eaten_ghosts:int = 0
@@ -77,18 +76,18 @@ func ghost_repath() -> void:
 	var scatter_points:Array[Node] = ghost.scatter_corner.get_children()
 
 	match ghost.state:
-		Ghost.CHASE:
+		Ghost.States.CHASE:
 			var target_position
-			match ghost_names[current_ghost]:
-				"Red":
+			match ghost.color:
+				Ghost.GhostColor.RED:
 					target_position = player.global_position
-				"Pink":
+				Ghost.GhostColor.PINK:
 					target_position = player.global_position + (player.velocity.normalized() * 4 * tile_size)
-				"Blue":
+				Ghost.GhostColor.BLUE:
 					var player_heading = player.global_position + (player.velocity.normalized() * 2 * tile_size)
 					var blinky_vector = ($Enemies/Red.global_position - player_heading)
 					target_position = player_heading - blinky_vector
-				"Orange":
+				Ghost.GhostColor.ORANGE:
 					var distance = ghost.global_position.distance_to(player.global_position)
 					if distance > 8 * tile_size:
 						target_position = player.global_position
@@ -98,7 +97,7 @@ func ghost_repath() -> void:
 						while target_position == ghost.agent.target_position:
 							target_position = scatter_points[randi() % scatter_points.size()].global_position
 			ghost.agent.target_position = target_position
-		Ghost.CORNER:
+		Ghost.States.CORNER:
 			# When the current target_position is pretty much reached
 			if abs(ghost.agent.get_current_navigation_path_index() - ghost.agent.get_current_navigation_path().size()) < 3:
 				# Pick a random assigned point in the corner of the map to go to
@@ -106,12 +105,12 @@ func ghost_repath() -> void:
 				while new_pos == ghost.agent.target_position:
 					new_pos = scatter_points[randi() % scatter_points.size()].global_position
 				ghost.agent.target_position = new_pos
-		Ghost.SCARED:
+		Ghost.States.SCARED:
 			# TODO: Fix?
 			ghost.agent.target_position = Vector2(randf_range(156, 372), randf_range(24, 270))
-		Ghost.EATEN:
+		Ghost.States.EATEN:
 			pass
-		Ghost.IN_PEN:
+		Ghost.States.IN_PEN:
 			pass
 
 
