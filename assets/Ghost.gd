@@ -16,6 +16,7 @@ enum States {
 }
 
 @onready var gamenode = get_node("/root/Game")
+@onready var map:RID = get_world_2d().navigation_map
 @onready var animation:AnimatedSprite2D = $Animation
 @onready var agent:NavigationAgent2D = $NavigationAgent2D
 @export var color:GhostColor
@@ -36,7 +37,7 @@ func _ready() -> void:
 	assert(scatter_corner, "Assign the instance's Scatter Corner in the inspector")
 	start_pos = global_position
 	animation.play("idle")
-	if OS.is_debug_build():
+	if OS.is_debug_build(): # Make sure to uncheck "Debug" when exporting.
 		agent.debug_enabled = true
 		agent.debug_use_custom = true
 		match color:
@@ -94,6 +95,17 @@ func scared() -> void:
 	if state != States.IN_PEN and state != States.EATEN:
 		state = States.SCARED
 		emit_signal("ghost_became_vulnerable")
+
+
+func random_scared_path() -> void:
+	var target_position = global_position
+	var dirs = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)]
+	var current_dir = velocity.normalized()
+	var dir = current_dir
+	while dir == current_dir or (not Game.point_on_navmesh(map, target_position)):
+		dir = dirs[randi() % dirs.size()]
+		target_position = (global_position + (dir*gamenode.tile_size*8)).snapped(gamenode.tile_size)
+	agent.target_position = target_position
 
 
 func animate(vel:Vector2) -> void:

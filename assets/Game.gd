@@ -1,6 +1,7 @@
 extends Node2D
+class_name Game
 
-const tile_size:int = 8
+@onready var tile_size:Vector2 = Vector2($Arena/Arena_Grid.tile_set.tile_size)
 
 @export var pellet_prefab:Resource
 @export var vulnerable_time:float = 7.0
@@ -82,14 +83,14 @@ func ghost_repath() -> void:
 				Ghost.GhostColor.RED:
 					target_position = player.global_position
 				Ghost.GhostColor.PINK:
-					target_position = player.global_position + (player.velocity.normalized() * 4 * tile_size)
+					target_position = player.global_position + (player.velocity.normalized() * 4 * tile_size.x)
 				Ghost.GhostColor.BLUE:
-					var player_heading = player.global_position + (player.velocity.normalized() * 2 * tile_size)
+					var player_heading = player.global_position + (player.velocity.normalized() * 2 * tile_size.x)
 					var blinky_vector = ($Enemies/Red.global_position - player_heading)
 					target_position = player_heading - blinky_vector
 				Ghost.GhostColor.ORANGE:
 					var distance = ghost.global_position.distance_to(player.global_position)
-					if distance > 8 * tile_size:
+					if distance > 8 * tile_size.x:
 						target_position = player.global_position
 					else:
 						# Basically same as Scatter/CORNER Mode
@@ -106,8 +107,8 @@ func ghost_repath() -> void:
 					new_pos = scatter_points[randi() % scatter_points.size()].global_position
 				ghost.agent.target_position = new_pos
 		Ghost.States.SCARED:
-			# TODO: Fix?
-			ghost.agent.target_position = Vector2(randf_range(156, 372), randf_range(24, 270))
+			if abs(ghost.agent.get_current_navigation_path_index() - ghost.agent.get_current_navigation_path().size()) <= 2:
+				ghost.random_scared_path()
 		Ghost.States.EATEN:
 			pass
 		Ghost.States.IN_PEN:
@@ -130,6 +131,7 @@ func _on_Power_Pellet_eaten() -> void:
 	$UI.add_score(50)
 	for ghost in ghosts:
 		ghost.scared()
+		ghost.random_scared_path()
 	for _i in 4:
 		ghost_repath()
 	scattering = true
@@ -257,5 +259,5 @@ func toggle_invulnerability() -> void:
 	mortal = !mortal
 
 
-func point_on_navmesh(point:Vector2) -> bool:
+static func point_on_navmesh(map:RID, point:Vector2) -> bool:
 	return (NavigationServer2D.map_get_closest_point(map, point) - point).is_zero_approx()
