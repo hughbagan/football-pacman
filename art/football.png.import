@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drtn3j5aua77n"
-path="res://.godot/imported/footballplayer_idle.png-5ce0c8f38f5282a6bf4790c55c5f3fe3.ctex"
+uid="uid://c7mgkcv5xm5l5"
+path="res://.godot/imported/football.png-a24d336a12ced9a9590598a470c860fc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/footballplayer_idle.png"
-dest_files=["res://.godot/imported/footballplayer_idle.png-5ce0c8f38f5282a6bf4790c55c5f3fe3.ctex"]
+source_file="res://art/football.png"
+dest_files=["res://.godot/imported/football.png-a24d336a12ced9a9590598a470c860fc.ctex"]
 
 [params]
 

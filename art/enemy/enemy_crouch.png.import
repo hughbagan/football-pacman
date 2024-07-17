@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e4qeo1nr851q"
-path="res://.godot/imported/footballplayer_run.png-6c827c40c75aee10e96341a75641d4b4.ctex"
+uid="uid://drtn3j5aua77n"
+path="res://.godot/imported/enemy_crouch.png-6f92d57cd3f3ca349660fe29fc10ac72.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/footballplayer_run.png"
-dest_files=["res://.godot/imported/footballplayer_run.png-6c827c40c75aee10e96341a75641d4b4.ctex"]
+source_file="res://art/enemy/enemy_crouch.png"
+dest_files=["res://.godot/imported/enemy_crouch.png-6f92d57cd3f3ca349660fe29fc10ac72.ctex"]
 
 [params]
 

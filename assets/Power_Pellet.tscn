@@ -1,22 +1,18 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://00qmhkcny6fn"]
 
-[ext_resource type="Texture2D" uid="uid://bqblgs7ia4ku6" path="res://art/Power_Pellet.png" id="1"]
 [ext_resource type="Script" path="res://assets/Pellet.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://c7mgkcv5xm5l5" path="res://art/football.png" id="2_gqc6h"]
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="CircleShape2D" id="1"]
 radius = 4.0
 
 [node name="Power_Pellet" type="Area2D"]
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_group_": true
-}
+script = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+shape = SubResource("1")
 
 [node name="Power_Pellet" type="Sprite2D" parent="."]
-position = Vector2( 0.5, 0.5 )
-texture = ExtResource( 1 )
+texture = ExtResource("2_gqc6h")
 
 [connection signal="body_entered" from="." to="." method="_on_Pellet_body_entered"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://rl0plylmqwre"]
+[gd_scene load_steps=19 format=3 uid="uid://rl0plylmqwre"]
 
 [ext_resource type="PackedScene" uid="uid://bcj3hvtkiuemh" path="res://assets/Pellets.tscn" id="1"]
 [ext_resource type="TileSet" uid="uid://cqtqobmlrpe3c" path="res://art/Background_Tileset.tres" id="2"]
@@ -15,6 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://dpwr1iwoov461" path="res://audio/facedownhut.mp3" id="15_hm63l"]
 [ext_resource type="AudioStream" uid="uid://bsnq2gsutj63v" path="res://audio/Scared.wav" id="16"]
 [ext_resource type="AudioStream" uid="uid://bdeiv0lswnpes" path="res://audio/Eye_Eww.wav" id="17"]
+[ext_resource type="AudioStream" uid="uid://43geerbkc0bc" path="res://audio/fightsong.mp3" id="17_qwgdm"]
 [ext_resource type="AudioStream" uid="uid://bajjvk81qyv02" path="res://audio/Bwahhh.wav" id="18"]
 
 [sub_resource type="RectangleShape2D" id="1"]
@@ -332,6 +333,10 @@ pitch_scale = 1.2
 [node name="Bwahhh" type="AudioStreamPlayer" parent="Sounds"]
 stream = ExtResource("18")
 pitch_scale = 1.75
+
+[node name="FightSong" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("17_qwgdm")
+volume_db = -10.0
 
 [connection signal="pellet_eaten" from="Pellets" to="." method="_on_Pellet_eaten"]
 [connection signal="power_pellet_eaten" from="Pellets" to="." method="_on_Power_Pellet_eaten"]

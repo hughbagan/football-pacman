@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://caqj1oxqxobmc"
-path="res://.godot/imported/footballplayer_wheel.png-b15832757f5fb060c9c7c4c55cae02ee.ctex"
+uid="uid://e4qeo1nr851q"
+path="res://.godot/imported/enemy_run.png-9344f860dcbda03e1d5b5921716390f9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/footballplayer_wheel.png"
-dest_files=["res://.godot/imported/footballplayer_wheel.png-b15832757f5fb060c9c7c4c55cae02ee.ctex"]
+source_file="res://art/enemy/enemy_run.png"
+dest_files=["res://.godot/imported/enemy_run.png-9344f860dcbda03e1d5b5921716390f9.ctex"]
 
 [params]
 

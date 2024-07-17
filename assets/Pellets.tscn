@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bcj3hvtkiuemh"]
 
-[ext_resource type="PackedScene" path="res://assets/Power_Pellet.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://00qmhkcny6fn" path="res://assets/Power_Pellet.tscn" id="1"]
 [ext_resource type="Script" path="res://assets/Pellets.gd" id="1_ae8nc"]
 [ext_resource type="PackedScene" path="res://assets/Pellet.tscn" id="2"]
 

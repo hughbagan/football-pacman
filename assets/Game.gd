@@ -228,16 +228,20 @@ func _on_ghost_restored() -> void:
 func play_appropriate_ghost_audio() -> void:
 	if eaten_ghosts > 0:
 		$Sounds/Ghost_wahwah.stop()
-		$Sounds/Ghost_Woo.stop()
+		#$Sounds/Ghost_Woo.stop()
+		$Sounds/FightSong.stop()
 		$Sounds/Ghost_ewweww.play()
 	elif vulnearable_ghosts > 0:
-		$Sounds/Ghost_Woo.stop()
+		#$Sounds/Ghost_Woo.stop()
+		$Sounds/FightSong.stop()
 		$Sounds/Ghost_ewweww.stop()
 		$Sounds/Ghost_wahwah.play()
 	else:
 		$Sounds/Ghost_ewweww.stop()
 		$Sounds/Ghost_wahwah.stop()
-		$Sounds/Ghost_Woo.play()
+		#$Sounds/Ghost_Woo.play()
+		if not $Sounds/FightSong.playing:
+			$Sounds/FightSong.play()
 
 
 func stop_ghost_audio() -> void:
@@ -248,6 +252,7 @@ func stop_ghost_audio() -> void:
 
 func _on_Intro_finished() -> void:
 	player.movement_enabled = true
+	$Sounds/FightSong.play()
 
 
 func _on_PacMan_player_reset() -> void:

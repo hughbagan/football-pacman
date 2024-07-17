@@ -36,7 +36,7 @@ func _ready() -> void:
 	assert(color != null, "Assign the instance's GhostColor in the inspector")
 	assert(scatter_corner, "Assign the instance's Scatter Corner in the inspector")
 	start_pos = global_position
-	animation.play("idle")
+	animation.play("crouch")
 	if OS.is_debug_build(): # Make sure to uncheck "Debug" when exporting.
 		agent.debug_enabled = true
 		agent.debug_use_custom = true
@@ -98,13 +98,17 @@ func scared() -> void:
 
 
 func random_scared_path() -> void:
-	var target_position = global_position
-	var dirs = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)]
-	var current_dir = velocity.normalized()
-	var dir = current_dir
+	var target_position := global_position
+	var dirs := [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)]
+	var current_dir := velocity.normalized()
+	var dir := current_dir
+	var i := 0
 	while dir == current_dir or (not Game.point_on_navmesh(map, target_position)):
 		dir = dirs[randi() % dirs.size()]
 		target_position = (global_position + (dir*gamenode.tile_size*8)).snapped(gamenode.tile_size)
+		i+=1
+		if i >= dirs.size()-1:
+			break # INF loop safeguard
 	agent.target_position = target_position
 
 
@@ -133,7 +137,7 @@ func reset() -> void:
 	global_position = start_pos
 	agent.target_position = start_pos
 	state = States.IN_PEN
-	animation.play("idle")
+	animation.play("crouch")
 
 
 func warp_to(pos:Vector2) -> void:

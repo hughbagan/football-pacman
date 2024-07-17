@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://braeqem8au6st"
-path="res://.godot/imported/footballplayer_worm.png-77e4575d956e793b7344c6c7fe77dc0a.ctex"
+uid="uid://dj3bndvcuwpgl"
+path="res://.godot/imported/player_crouch.png-9ba2b135ba384795d5ffef24115821b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/footballplayer_worm.png"
-dest_files=["res://.godot/imported/footballplayer_worm.png-77e4575d956e793b7344c6c7fe77dc0a.ctex"]
+source_file="res://art/player/player_crouch.png"
+dest_files=["res://.godot/imported/player_crouch.png-9ba2b135ba384795d5ffef24115821b8.ctex"]
 
 [params]
 
