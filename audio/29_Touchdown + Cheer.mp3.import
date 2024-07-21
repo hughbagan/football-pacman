@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://ciyegfuhjb05m"
+path="res://.godot/imported/29_Touchdown + Cheer.mp3-ba22688f640c8e4c959d32a2dbd2f159.mp3str"
+
+[deps]
+
+source_file="res://audio/29_Touchdown + Cheer.mp3"
+dest_files=["res://.godot/imported/29_Touchdown + Cheer.mp3-ba22688f640c8e4c959d32a2dbd2f159.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c2qvdnek2j86l"
+path="res://.godot/imported/26_Extra Point No Good.mp3-4de68206f3d8eba85c72f6e0ec3e9a6c.mp3str"
+
+[deps]
+
+source_file="res://audio/26_Extra Point No Good.mp3"
+dest_files=["res://.godot/imported/26_Extra Point No Good.mp3-4de68206f3d8eba85c72f6e0ec3e9a6c.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

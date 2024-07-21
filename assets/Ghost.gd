@@ -21,10 +21,11 @@ enum States {
 @onready var agent:NavigationAgent2D = $NavigationAgent2D
 @export var color:GhostColor
 @export var scatter_corner:Node2D
-var speed:float = 176.0
+var speed:float = 173.0
 var state_speed:float = 1.0
 var state:States = States.IN_PEN
 var start_pos
+var mod_x:float = randf()
 
 signal player_ate_ghost
 signal ghost_ate_player
@@ -58,7 +59,7 @@ func nav_setup() -> void:
 	agent.target_position = global_position
 
 
-func _physics_process(_delta:float):
+func _physics_process(delta:float):
 	if agent.is_navigation_finished():
 		if state == States.EATEN:
 			state = States.CHASE
@@ -71,6 +72,10 @@ func _physics_process(_delta:float):
 			speed_multiplier = 2
 		States.SCARED:
 			speed_multiplier = 0.6
+			mod_x += delta
+			set_modulate(Color(0, cos(8*mod_x)+1, 1, 1))
+		_:
+			set_modulate(Color(1, 1, 1, 1))
 	velocity = global_position.direction_to(agent.get_next_path_position()) * speed * speed_multiplier
 	animate(velocity)
 	set_velocity(velocity)
@@ -137,6 +142,7 @@ func reset() -> void:
 	global_position = start_pos
 	agent.target_position = start_pos
 	state = States.IN_PEN
+	mod_x = randf()
 	animation.play("crouch")
 
 
@@ -145,9 +151,11 @@ func warp_to(pos:Vector2) -> void:
 	#path.resize(0) # TODO: how to translate to NavigationAgent2D?
 
 
-func _on_Area_body_entered(_body) -> void:
-	if state == States.SCARED:
-		emit_signal("player_ate_ghost", self)
-		state = States.EATEN
-	elif state == States.CHASE or state == States.CORNER:
-		emit_signal("ghost_ate_player", self)
+func _on_Area_body_entered(body) -> void:
+	if body is Pacman:
+		if not body.collider.disabled:
+			if state == States.SCARED:
+				emit_signal("player_ate_ghost", self)
+				state = States.EATEN
+			elif state == States.CHASE or state == States.CORNER:
+				emit_signal("ghost_ate_player", self)

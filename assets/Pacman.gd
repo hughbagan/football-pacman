@@ -4,6 +4,7 @@ class_name Pacman
 @onready var gamenode = get_node("/root/Game")
 @onready var animation:AnimatedSprite2D = $AnimatedSprite2D
 @onready var img_sprite:Sprite2D = $ImgSprite
+@onready var collider:CollisionShape2D = $CollisionShape2D
 @export var speed := 175
 @export var current_dir:String = "none"
 @export var movement_direction:Vector2 = Vector2.ZERO
@@ -51,12 +52,10 @@ func animate_movement():
 func die():
 	movement_enabled = false
 	animation.play("fall")
-	$Dead.play()
-	var _d = animation.connect("animation_finished", Callable(self, "reset"))
 
 
-func _physics_process(delta:float):
-	if !movement_enabled:
+func _physics_process(_delta:float):
+	if !movement_enabled or get_tree().paused:
 		return
 
 	get_input()

@@ -19,6 +19,7 @@ var scattering:bool = false
 @onready var ghosts:Array[Node] = [$Enemies/Red, $Enemies/Pink, $Enemies/Blue, $Enemies/Orange]
 @onready var player:Pacman = $"Pacman"
 @onready var map:RID = get_world_2d().navigation_map
+@onready var punches:Array[Node] = $Sounds/Punches.get_children()
 
 
 func _init() -> void:
@@ -39,12 +40,16 @@ func _ready() -> void:
 
 
 func level_won() -> void:
+	$Sounds/Touchdown.play()
 	$UI.level_won()
+	$UI/TouchdownText.show()
+	await get_tree().create_timer(7.0).timeout
 	reset()
 
 
 func reset() -> void:
-	stop_ghost_audio()
+	var t:Tween = self.create_tween()
+	t.tween_property($Sounds/FightSong, "pitch_scale", 1.0, 0.5)
 	for ghost in ghosts:
 		ghost.reset()
 	vulnearable_ghosts = 0
@@ -126,7 +131,8 @@ func _on_ExitR_body_entered(body) -> void:
 
 
 func _on_Power_Pellet_eaten() -> void:
-	$Sounds/Ghost_Woo.stop()
+	$Sounds/FightSong.stream_paused = true
+	$Sounds/Interception.play()
 	ghost_bonus = 200
 	$UI.add_score(50)
 	for ghost in ghosts:
@@ -141,15 +147,16 @@ func _on_Power_Pellet_eaten() -> void:
 		level_won()
 
 
+func _on_pickup_sound_finished():
+	$Sounds/FightSong.stream_paused = false
+	$Sounds/FightSong.pitch_scale = 1.3
+
+
 func _on_Pellet_eaten() -> void:
 	$UI.add_score(10)
 	pellets_left -= 1
-	if pellets_left % 2 == 1:
-		$Sounds/Dot_1.play()
-	else:
-		$Sounds/Dot_2.play()
+	$Sounds/Pickup.play()
 	if pellets_left == starting_pellets - 1:
-		play_appropriate_ghost_audio()
 		ghosts[0].start()
 		ghosts[1].start()
 	if pellets_left == starting_pellets - 30:
@@ -168,7 +175,6 @@ func _on_Scatter_Timer_timeout() -> void:
 	scattering = !scattering
 	if vulnearable_ghosts != 0:
 		vulnearable_ghosts = 0
-		play_appropriate_ghost_audio()
 	if scattering:
 		$Scatter_Timer.start(7)
 		for ghost in ghosts:
@@ -182,12 +188,21 @@ func _on_Scatter_Timer_timeout() -> void:
 func _on_ghost_ate_player(_ghost) -> void:
 	if not mortal:
 		return
-	stop_ghost_audio()
 	lives -= 1
 	$UI.draw_lives(lives)
+	player.collider.set_deferred("disabled", true)
 	player.die()
+	$UI/PlayerDownText.show()
+	$Sounds/Whistle.play()
+	punches[randi() % punches.size()].play()
+	var t:Tween = self.create_tween()
+	t.tween_property($Sounds/FightSong, "pitch_scale", 1.0, 1.0)
+	await get_tree().create_timer(5.0).timeout
+	player.reset()
+	$UI/PlayerDownText.hide()
 	for ghost in ghosts:
 		ghost.reset()
+	player.collider.disabled = false
 	await get_tree().create_timer(0.10).timeout
 	starting_pellets = pellets_left
 	if lives < 0:
@@ -211,43 +226,21 @@ func _on_player_ate_ghost(ghost) -> void:
 	ghost.agent.target_position = $GhostRespawn.global_position
 	vulnearable_ghosts -= 1
 	eaten_ghosts += 1
-	$Sounds/Bwahhh.play()
-	play_appropriate_ghost_audio()
+	$Sounds/Oof.play()
+	punches[randi() % punches.size()].play()
 
 
 func _on_ghost_became_vulnerable() -> void:
 	vulnearable_ghosts += 1
-	play_appropriate_ghost_audio()
 
 
 func _on_ghost_restored() -> void:
 	eaten_ghosts -= 1
-	play_appropriate_ghost_audio()
 
 
-func play_appropriate_ghost_audio() -> void:
-	if eaten_ghosts > 0:
-		$Sounds/Ghost_wahwah.stop()
-		#$Sounds/Ghost_Woo.stop()
-		$Sounds/FightSong.stop()
-		$Sounds/Ghost_ewweww.play()
-	elif vulnearable_ghosts > 0:
-		#$Sounds/Ghost_Woo.stop()
-		$Sounds/FightSong.stop()
-		$Sounds/Ghost_ewweww.stop()
-		$Sounds/Ghost_wahwah.play()
-	else:
-		$Sounds/Ghost_ewweww.stop()
-		$Sounds/Ghost_wahwah.stop()
-		#$Sounds/Ghost_Woo.play()
-		if not $Sounds/FightSong.playing:
-			$Sounds/FightSong.play()
-
-
-func stop_ghost_audio() -> void:
-	$Sounds/Ghost_Woo.stop()
-	$Sounds/Ghost_ewweww.stop()
-	$Sounds/Ghost_wahwah.stop()
+func _on_start_button_pressed():
+	$StartScreen.hide()
+	$Sounds/Intro.play()
 
 
 func _on_Intro_finished() -> void:
